@@ -4,5 +4,7 @@
   "email": "Email",
   "password": "Пароль",
   "signInWith": "Войти через",
-  "doNotHaveAnAccount" : "Нет аккаунта?"
+  "doNotHaveAnAccount" : "Нет аккаунта?",
+  "alreadyThereIsAnAccount": "Уже есть аккаунт?",
+  "name": "ФИО"
 }

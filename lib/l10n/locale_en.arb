@@ -4,5 +4,7 @@
   "email": "Email",
   "password": "Password",
   "signInWith": "Sign in with",
-  "doNotHaveAnAccount" : "Don't have an account?"
+  "doNotHaveAnAccount" : "Don't have an account?",
+  "alreadyThereIsAnAccount": "Already there is an account?",
+  "name": "Name"
 }

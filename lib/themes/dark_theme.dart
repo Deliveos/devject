@@ -26,7 +26,7 @@ final ThemeData darkTheme = ThemeData(
       ),
       caption: TextStyle(
         color: kTextColor,
-        fontSize: 48.0,
+        fontSize: 36.0,
         fontWeight: FontWeight.w700
       ),
       button: TextStyle(

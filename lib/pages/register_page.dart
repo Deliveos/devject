@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projetex/constants/colors.dart';
-import 'package:projetex/pages/register_page.dart';
+import 'package:projetex/pages/login_page.dart';
 import 'package:projetex/utils/size.dart';
 import 'package:projetex/widgets/backdrop_filter_container.dart';
 import 'package:projetex/widgets/button.dart';
@@ -8,14 +8,14 @@ import 'package:projetex/widgets/default_sizedbox.dart';
 import 'package:projetex/widgets/input_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(AppLocalizations.of(context)!.signIn.toUpperCase(), style: Theme.of(context).textTheme.caption),
+                  Text(AppLocalizations.of(context)!.signUp.toUpperCase(), style: Theme.of(context).textTheme.caption),
                   const DefaultSizedBox(),
                   Form(
                     child: Column(
@@ -49,6 +49,8 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                     children:  <Widget>[
+                      InputField(hintText: AppLocalizations.of(context)!.name),
+                      const DefaultSizedBox(),
                       InputField(hintText: AppLocalizations.of(context)!.email),
                       const DefaultSizedBox(),
                       InputField(hintText: AppLocalizations.of(context)!.password),
@@ -64,24 +66,30 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Text(AppLocalizations.of(context)!.signInWith.toLowerCase(), style: Theme.of(context).textTheme.bodyText1,),
+                  Text(
+                    AppLocalizations.of(context)!.signInWith.toLowerCase(), 
+                    style: Theme.of(context).textTheme.bodyText1
+                  ),
                   TextButton(onPressed: () {}, child: const Text("Google")),
                   const DefaultSizedBox(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(AppLocalizations.of(context)!.doNotHaveAnAccount, style: Theme.of(context).textTheme.bodyText1,),
+                      Text(
+                        AppLocalizations.of(context)!.alreadyThereIsAnAccount, 
+                        style: Theme.of(context).textTheme.bodyText1
+                      ),
                       TextButton(
                         style: const ButtonStyle(
                           enableFeedback: false,
                         ),
                         onPressed: ()  => Navigator.pushAndRemoveUntil(
                           context, 
-                          MaterialPageRoute(builder: (context) => const RegisterPage()), 
+                          MaterialPageRoute(builder: (context) => const LoginPage()), 
                           (route) => false
                         ),
                         child: Text(
-                          AppLocalizations.of(context)!.signUp, 
+                          AppLocalizations.of(context)!.signIn, 
                           style: Theme.of(context).textTheme.bodyText2!.copyWith(
                             decoration: TextDecoration.underline
                           )
