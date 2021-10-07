@@ -1,10 +1,20 @@
 {
   "signIn": "Sign in",
   "signUp": "Sign up",
-  "email": "Email",
   "password": "Password",
+  "repeatPassword": "Repeat password",
   "signInWith": "Sign in with",
   "doNotHaveAnAccount" : "Don't have an account?",
   "alreadyThereIsAnAccount": "Already there is an account?",
-  "name": "Name"
+  "name": "Name",
+  "nickname": "Nickname",
+  "projectName": "Project name",
+  "taskName": "Task name",
+  "responsible": "Responsible",
+  "start": "Start",
+  "timeToExecute": "Time to execute",
+  "end": "End",
+  "fieldCanNotBeEmpty": "Field can not be empty",
+  "passwordMismatch": "Password mismatch",
+  "thisNicknameIsAlreadyUsed": "This nickname is already used"
 }

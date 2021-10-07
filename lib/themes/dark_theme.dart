@@ -2,6 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:projetex/constants/colors.dart';
 
 final ThemeData darkTheme = ThemeData(
+  appBarTheme: const AppBarTheme(
+    centerTitle: true,
+    elevation: 1,
+    toolbarHeight: 50,
+    backgroundColor: Colors.transparent,
+    shadowColor: Colors.transparent,
+  ),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: kPrimaryLightColor,
+    hoverColor: kPrimaryLightColor,
+    focusColor: kPrimaryLightColor,
+    enableFeedback: false,
+    splashColor: kPrimaryDarkColor
+  ),
   primaryColor: kPrimaryLightColor,
   dividerTheme: const DividerThemeData(
       color: kPrimaryDarkColor
