@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:projetex/constants/colors.dart';
+import 'package:projetex/cubit/user_cubit.dart';
 import 'package:projetex/pages/register_page.dart';
 import 'package:projetex/services/projetex_api.dart';
 import 'package:projetex/utils/size.dart';
@@ -8,8 +10,7 @@ import 'package:projetex/widgets/button.dart';
 import 'package:projetex/widgets/default_sizedbox.dart';
 import 'package:projetex/widgets/input_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:projetex/widgets/input_text_editing_controller.dart';
 import 'main_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,20 +22,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _nicknameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final InputTextEditingController _nicknameOrEmailController = InputTextEditingController();
+  final InputTextEditingController _passwordController = InputTextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool isHiddenPassword = true;
 
   @override
   Widget build(BuildContext context) {
-    checkToken() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString("token");
-      if(token != null) {
-        Navigator.pushNamed(context, MainPage.routeName);
-      }
-    }
-    checkToken();
     return  Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -70,9 +64,12 @@ class _LoginPageState extends State<LoginPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                           children:  <Widget>[
+                            /*
+                            * NICKNAME OR EMAIL FIELD
+                            */
                             InputField(
-                              controller: _nicknameController,
-                              hintText: AppLocalizations.of(context)!.nickname,
+                              controller: _nicknameOrEmailController,
+                              hintText: AppLocalizations.of(context)!.nicknameOrEmail,
                               validator: (String? value) {
                                 if (value == null || value.isEmpty) {
                                   return AppLocalizations.of(context)!.fieldCanNotBeEmpty;
@@ -80,7 +77,23 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             ),
                             const HeightSizedBox(20),
+                            /*
+                            * PASSWORD FIELD
+                            */
                             InputField(
+                              suffixIcon: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    isHiddenPassword = !isHiddenPassword;
+                                  });
+                                },
+                                child: Icon(
+                                  isHiddenPassword ?  Icons.visibility_off : Icons.visibility, 
+                                  color: Theme.of(context).textTheme.bodyText1!.color,
+                                  size: 20
+                                ),
+                              ),
+                              obscureText: isHiddenPassword,
                               controller: _passwordController,
                               hintText: AppLocalizations.of(context)!.password,
                               validator: (String? value) {
@@ -90,10 +103,14 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             ),
                             const HeightSizedBox(20),
+                            /*
+                            * SIGN IN BUTTON
+                            */
                             PrimaryButton(
                               onTap: () async {
                                 if(_formKey.currentState!.validate()) {
-                                  if (await ProjetexApi.signIn(_nicknameController.text.trim(), _passwordController.text.trim()) != null) {
+                                  if (await ProjetexApi.signIn(_nicknameOrEmailController.text.trim(), _passwordController.text.trim()) != null) {
+                                    BlocProvider.of<UserCubit>(context).load();
                                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const MainPage()), (route) => false);
                                   }
                                 }
@@ -107,10 +124,10 @@ class _LoginPageState extends State<LoginPage> {
                           ]
                           )
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
                         const HeightSizedBox(20),
+                        /*
+                        * SIGN IN LINK
+                        */
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -121,7 +138,12 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               onPressed: ()  => Navigator.pushAndRemoveUntil(
                                 context, 
-                                MaterialPageRoute(builder: (context) => const RegisterPage()), 
+                                MaterialPageRoute(builder: (context) => 
+                                  BlocProvider.value(
+                                    value: BlocProvider.of<UserCubit>(context),
+                                    child: const RegisterPage(),
+                                  )
+                                ), 
                                 (route) => false
                               ),
                               child: Text(

@@ -6,3 +6,4 @@ const kBackgroundLightColor = Color(0xFF313E51);
 const kBackgroundDarkColor = Color(0xFF000000);
 const kTextColor = Color(0xFFFFFFFF);
 const kInputFieldColor = Color(0xFFEBEBEB);
+const kErrorTextColor = Color(0xFFFF7F7F);

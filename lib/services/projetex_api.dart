@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:projetex/models/project.dart';
+import 'package:projetex/models/user.dart';
+import 'package:projetex/providers/user_provider.dart';
 import 'package:crypto/crypto.dart';
 
 
 class ProjetexApi {
-  static const String _baseRoute = "http://192.168.0.109:5000/api";
+  static const String _baseRoute = "http://192.168.43.22:5000/api";
 
   static String _createPath(String path) => _baseRoute + "/" + path;
 
-  static Future<void> signUp(String name, String nickname, String password) async {
+  static Future<String?> signUp(String name, String nickname, String password) async {
     final http.Response response = await http.post(
       Uri.parse(_createPath("users/register")),
       headers: <String, String>{
@@ -20,11 +22,16 @@ class ProjetexApi {
         'nickname': nickname,
         'password': sha256.convert(utf8.encode(password)).toString()
       }),
-    );
-    if (jsonDecode(response.body)["token"] != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("token", jsonDecode(response.body)["token"]);
+    ); 
+    Map<String, dynamic> body = jsonDecode(response.body);
+    if (body["id"] != null 
+      && body["name"] != null
+      && body["nickname"] != null
+      && body["token"] != null
+      ) {
+      await UserProvider.create(User(id: body["id"], name: body["name"], nickname: body["nickname"], token: body["token"]));
     }
+    return body["token"];
   }
 
   static Future<String?> signIn(String nickname, String password) async {
@@ -38,19 +45,19 @@ class ProjetexApi {
         'password': sha256.convert(utf8.encode(password)).toString()
       }),
     );
-    print(nickname);
-    print(jsonDecode(response.body));
-    String? token = jsonDecode(response.body)["token"];
-    if (token != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("token", token);
-      return token;
+    Map<String, dynamic> body = jsonDecode(response.body);
+    if (body["id"] != null 
+      && body["name"] != null
+      && body["nickname"] != null
+      && body["token"] != null
+      ) {
+      UserProvider.create(User(id: body["id"], name: body["name"], nickname: body["nickname"], token: body["token"]));
     }
-    return null;
+    return body["token"];
   }
 
   static Future<void> logout() async {
-
+    await UserProvider.delete();
   }
 
   static Future<bool> checkForUser(String nickname) async {
@@ -65,4 +72,44 @@ class ProjetexApi {
     }
     return false;
   }
+
+  static Future<List<Project>> getAllProjects() async {
+    User? user = await UserProvider.get();
+    final http.Response response = await http.get(
+      Uri.parse(_createPath("projects")),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ' + user!.token
+      },
+    );
+    List<Project> projects = [];
+    Map body = jsonDecode(response.body);    
+    for (var project in body['projects']) {
+      projects.add(Project.fromMap(project));
+    }
+    return projects;
+  }
+
+  static Future<void> addProject(Project project) async {
+    User? user = await UserProvider.get();
+    await http.post(
+      Uri.parse(_createPath("projects")),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ' + user!.token
+      },
+      body: project.toMap()
+    );
+  }
+
+  // static Future<List<Responsible>?> getResponsible() {
+  //   await http.post(
+  //     Uri.parse(_createPath("projects")),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //       'Authorization': 'Bearer ' + user!.token
+  //     },
+  //     body: project.toMap()
+  //   );
+  // }
 }
