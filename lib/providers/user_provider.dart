@@ -1,5 +1,5 @@
-import 'package:projetex/models/user.dart';
-import 'package:projetex/services/database.dart';
+import 'package:devject/models/user.dart';
+import 'package:devject/services/database.dart';
 import 'package:sqflite/sqflite.dart';
 
 class UserProvider {
@@ -11,7 +11,13 @@ class UserProvider {
     SELECT * FROM user;
     '''));
     if (result.isNotEmpty) {
-      return User(id: result[0]['id'], name: result[0]['name'], nickname: result[0]['nickname'], token: result[0]['token']);
+      return User(
+        id: result[0]['id'], 
+        name: result[0]['name'], 
+        nickname: result[0]['nickname'], 
+        email: result[0]['email'], 
+        token: result[0]['token']
+      );
     }
     return null;
   }
@@ -19,8 +25,8 @@ class UserProvider {
   static Future create(User user) async {
     Database db = await _provider.database;
     return await db.rawQuery('''
-    INSERT INTO user(id, name, nickname, token)
-    VALUES(${user.id}, '${user.name}', '${user.nickname}', '${user.token}');
+    INSERT INTO user(id, name, nickname, email, token)
+    VALUES(${user.id}, '${user.name}', '${user.nickname}', '${user.email}', '${user.token}');
     ''');
   }
 

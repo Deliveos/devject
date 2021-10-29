@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:projetex/constants/colors.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
@@ -15,6 +14,7 @@ class PrimaryButton extends StatelessWidget {
     this.padding, 
     this.fontSize, 
     this.width,
+    this.borderRadius,
     required this.child
   }) : super(key: key);
 
@@ -30,12 +30,13 @@ class PrimaryButton extends StatelessWidget {
   final Image? iconImage;
   final EdgeInsets? padding;
   final double? fontSize;
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
     return Material(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: borderRadius ?? BorderRadius.circular(30),
         side: BorderSide.none,
       ),
       color: enabled 
@@ -47,9 +48,14 @@ class PrimaryButton extends StatelessWidget {
         child: Container(
           height: 50,
           padding: padding,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(30)),
-            gradient: LinearGradient(colors: [kPrimaryLightColor, kPrimaryDarkColor])
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(30)),
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).primaryColorLight,
+                Theme.of(context).primaryColorDark
+                ]
+            )
             ),
           child: Center(child: child),
         )

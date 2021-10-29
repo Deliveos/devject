@@ -1,17 +1,16 @@
+import 'package:devject/cubit/user_cubit.dart';
+import 'package:devject/services/api.dart';
+import 'package:devject/utils/size.dart';
+import 'package:devject/widgets/backdrop_filter_container.dart';
+import 'package:devject/widgets/button.dart';
+import 'package:devject/widgets/input_field.dart';
+import 'package:devject/widgets/input_text_editing_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:projetex/constants/colors.dart';
-import 'package:projetex/cubit/user_cubit.dart';
-import 'package:projetex/pages/login_page.dart';
-import 'package:projetex/pages/main_page.dart';
-import 'package:projetex/services/projetex_api.dart';
-import 'package:projetex/utils/size.dart';
-import 'package:projetex/widgets/backdrop_filter_container.dart';
-import 'package:projetex/widgets/button.dart';
-import 'package:projetex/widgets/default_sizedbox.dart';
-import 'package:projetex/widgets/input_field.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:projetex/widgets/input_text_editing_controller.dart';
+
+import 'login_page.dart';
+import 'main_page.dart';
 
 
 class RegisterPage extends StatefulWidget {
@@ -42,11 +41,11 @@ class _RegisterPageState extends State<RegisterPage> {
             delegate: SliverChildListDelegate([
               Container(
                 height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      kBackgroundLightColor,
-                      kBackgroundDarkColor
+                      Theme.of(context).colorScheme.background,
+                      Theme.of(context).colorScheme.onBackground
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter
@@ -65,7 +64,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           AppLocalizations.of(context)!.signUp.toUpperCase(), 
                           style: Theme.of(context).textTheme.caption
                         ),
-                        const HeightSizedBox(20),
+                        SizedBox(
+                          height: ScreenSize.height(context, 5),
+                        ),
                         Form(
                           key: _formKey,
                           child: Column(
@@ -85,7 +86,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   }
                                 },
                               ),
-                              const HeightSizedBox(20),
+                              SizedBox(
+                                height: ScreenSize.height(context, 5),
+                              ),
                               /*
                               * NICKNAME FIELD
                               */
@@ -101,13 +104,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                     return AppLocalizations.of(context)!.usingAnInvalidCharacter + ' ' + AppLocalizations.of(context)!.theFollowingCharactersAreAllowed;
                                   }
                                   () async {
-                                    if (await ProjetexApi.checkForUser(_nicknameController.text)) {
+                                    if (await API.checkForUser(_nicknameController.text)) {
                                       return AppLocalizations.of(context)!.thisNicknameIsAlreadyUsed;
                                     }
                                   };
                                 },
                               ),
-                              const HeightSizedBox(20),
+                              SizedBox(
+                                height: ScreenSize.height(context, 5),
+                              ),
                               /*
                               * EMAIL FIELD
                               */
@@ -120,16 +125,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                   } else if (value.contains(" ") ) {
                                     return AppLocalizations.of(context)!.nicknameMustNotContainSpaces + ' ' + AppLocalizations.of(context)!.theFollowingCharactersAreAllowed;
                                   } else if (!RegExp(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)").hasMatch(value)) {
-                                    return "Email is not correct";
+                                    return AppLocalizations.of(context)!.emailIsNotCorrect;
                                   }
                                   () async {
-                                    if (await ProjetexApi.checkForUser(_nicknameController.text)) {
+                                    if (await API.checkForUser(_nicknameController.text)) {
                                       return AppLocalizations.of(context)!.thisNicknameIsAlreadyUsed;
                                     }
                                   };
                                 },
                               ),
-                              const HeightSizedBox(20),
+                              SizedBox(
+                                height: ScreenSize.height(context, 5),
+                              ),
                               /*
                               * PASSWORD FIELD
                               */
@@ -154,12 +161,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                     return AppLocalizations.of(context)!.fieldCanNotBeEmpty;
                                   } else if (_passwordController.text.length < 8) {
                                     return AppLocalizations.of(context)!.minimumPasswordLength;
-                                  } else if(RegExp(r"^[$;\'\\/=+(){}<>?\,[]@!#№%^&].*").stringMatch(value) != null) {
+                                  } else if(RegExp(r"[\{\}\[\]\(\)\'\<!?;,@#$%^&*>+=]").hasMatch(value)) {
                                     return AppLocalizations.of(context)!.usingAnInvalidCharacter + ' ' + AppLocalizations.of(context)!.theFollowingCharactersAreAllowed;
                                   }
                                 },
                               ),
-                              const HeightSizedBox(20),
+                              SizedBox(
+                                height: ScreenSize.height(context, 5),
+                              ),
                               /*
                               * REPEAT PASSWORD FIELD
                               */
@@ -187,19 +196,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                   }
                                 },
                               ),
-                              const HeightSizedBox(20),
+                              SizedBox(
+                                height: ScreenSize.height(context, 5),
+                              ),
                               /*
                               * SIGN UP BUTTON
                               */
                               PrimaryButton(
                                 onTap: () async {
                                   if(_nameController.isValid && 
-                                  _nicknameController.isValid && 
+                                  _nicknameController.isValid &&
+                                  _emailController.isValid && 
                                   _passwordController.isValid && 
                                   _repeatPasswordController.isValid) {
-                                    if(await ProjetexApi.signUp(
+                                    if(await API.signUp(
                                       _nameController.text.trim(), 
-                                      _nicknameController.text.trim(), 
+                                      _nicknameController.text.trim(),
+                                      _emailController.text.trim(), 
                                       _passwordController.text.trim()) != null) {
                                       BlocProvider.of<UserCubit>(context).load();
                                       Navigator.pushAndRemoveUntil(
@@ -221,7 +234,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             ]
                           )
                         ),
-                        const HeightSizedBox(20),
+                        SizedBox(
+                          height: ScreenSize.height(context, 5),
+                        ),
                         /*
                         * SIGN IN LINK
                         */

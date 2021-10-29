@@ -1,4 +1,4 @@
-import 'package:projetex/models/user.dart';
+import 'package:devject/models/user.dart';
 
 class Project {
   final int? id;
@@ -22,20 +22,27 @@ class Project {
 
 
 
-  static Project fromMap(Map<String, dynamic> map) => Project(
-    id:  map['id'],
-    ownerId: map['owner_id'],
-    name: map['name'], 
-    responsible: [],
-    description: map['description'],
-    startDate: null, // DateTime.fromMillisecondsSinceEpoch(map['start_date']),
-    endDate: null, // DateTime.fromMillisecondsSinceEpoch(map['end_date']),
-    progress: map['progress']
-  );
+  static Project fromMap(Map<String, dynamic> map) {
+    List<User> responsible = [];
+    for (Map<String, dynamic> user in map['responsible']) {
+      responsible.add(User.fromMap(user));
+    }
+    return Project(
+      id:  map['id'],
+      ownerId: map['owner_id'],
+      name: map['name'], 
+      responsible: responsible,
+      description: map['description'],
+      startDate: map['start_date'] != null ? DateTime.fromMillisecondsSinceEpoch(map['start_date']) : null,
+      endDate: map['end_date'] != null ? DateTime.fromMillisecondsSinceEpoch(map['end_date']) : null,
+      progress: map['progress']
+    );
+  }
 
-  Map<String, dynamic> toMap() =>  <String, dynamic>{
+  Map<String, dynamic> toMap() => <String, dynamic>{
     "id": id,
     "name": name,
+    "responsible": responsible.map((user) => user.id).toList(),
     "description": description,
     "start_date": startDate?.millisecondsSinceEpoch ,
     "end_date": endDate?.millisecondsSinceEpoch,

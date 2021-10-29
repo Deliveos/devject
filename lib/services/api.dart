@@ -1,17 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:projetex/models/project.dart';
-import 'package:projetex/models/user.dart';
-import 'package:projetex/providers/user_provider.dart';
-import 'package:crypto/crypto.dart';
+import 'package:devject/models/project.dart';
+import 'package:devject/models/user.dart';
+import 'package:devject/providers/user_provider.dart';
 
 
-class ProjetexApi {
+class API {
   static const String _baseRoute = "http://192.168.43.22:5000/api";
 
   static String _createPath(String path) => _baseRoute + "/" + path;
 
-  static Future<String?> signUp(String name, String nickname, String password) async {
+  static Future<String?> signUp(String name, String nickname, String email, String password) async {
     final http.Response response = await http.post(
       Uri.parse(_createPath("users/register")),
       headers: <String, String>{
@@ -20,21 +19,23 @@ class ProjetexApi {
       body: jsonEncode(<String, String>{
         'name': name,
         'nickname': nickname,
-        'password': sha256.convert(utf8.encode(password)).toString()
+        'email': email,
+        'password': password
       }),
     ); 
     Map<String, dynamic> body = jsonDecode(response.body);
     if (body["id"] != null 
       && body["name"] != null
       && body["nickname"] != null
+      && body["email"] != null
       && body["token"] != null
       ) {
-      await UserProvider.create(User(id: body["id"], name: body["name"], nickname: body["nickname"], token: body["token"]));
+      await UserProvider.create(User(id: body["id"], name: body["name"], nickname: body["nickname"], email: body["email"], token: body["token"]));
     }
     return body["token"];
   }
 
-  static Future<String?> signIn(String nickname, String password) async {
+  static Future<String?> signInByNickname(String nickname, String password) async {
     final http.Response response = await http.post(
       Uri.parse(_createPath("users/login")),
       headers: <String, String>{
@@ -42,7 +43,7 @@ class ProjetexApi {
       },
       body: jsonEncode(<String, String>{
         'nickname': nickname,
-        'password': sha256.convert(utf8.encode(password)).toString()
+        'password': password
       }),
     );
     Map<String, dynamic> body = jsonDecode(response.body);
@@ -51,7 +52,29 @@ class ProjetexApi {
       && body["nickname"] != null
       && body["token"] != null
       ) {
-      UserProvider.create(User(id: body["id"], name: body["name"], nickname: body["nickname"], token: body["token"]));
+      UserProvider.create(User(id: body["id"], name: body["name"], nickname: body["nickname"], email: body["email"], token: body["token"]));
+    }
+    return body["token"];
+  }
+
+  static Future<String?> signInByEmail(String email, String password) async {
+    final http.Response response = await http.post(
+      Uri.parse(_createPath("users/login")),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': email,
+        'password': password
+      }),
+    );
+    Map<String, dynamic> body = jsonDecode(response.body);
+    if (body["id"] != null 
+      && body["name"] != null
+      && body["nickname"] != null
+      && body["token"] != null
+      ) {
+      UserProvider.create(User(id: body["id"], name: body["name"], nickname: body["nickname"], email: body["email"], token: body["token"]));
     }
     return body["token"];
   }
@@ -79,7 +102,7 @@ class ProjetexApi {
       Uri.parse(_createPath("projects")),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ' + user!.token
+        'Authorization': 'Bearer ' + user!.token!
       },
     );
     List<Project> projects = [];
@@ -96,20 +119,26 @@ class ProjetexApi {
       Uri.parse(_createPath("projects")),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer ' + user!.token
+        'Authorization': 'Bearer ' + user!.token!
       },
-      body: project.toMap()
+      body: jsonEncode(project.toMap())
     );
   }
 
-  // static Future<List<Responsible>?> getResponsible() {
-  //   await http.post(
-  //     Uri.parse(_createPath("projects")),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //       'Authorization': 'Bearer ' + user!.token
-  //     },
-  //     body: project.toMap()
-  //   );
-  // }
+  static Future<List<User>> searchUserByNickname(String nickname) async {
+    User? user = await UserProvider.get();
+    final http.Response response = await http.get(
+      Uri.parse(_createPath("users/search?nickname=$nickname")),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ' + user!.token!
+      }
+    );
+    List<User> users = [];
+    Map body = jsonDecode(response.body);
+    for (var user in body['users']) {
+      users.add(User.fromMap(user));
+    }
+    return users.isNotEmpty ? users : [];
+  }
 }

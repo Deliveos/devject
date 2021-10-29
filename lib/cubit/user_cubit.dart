@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:projetex/models/user.dart';
-import 'package:projetex/providers/user_provider.dart';
+import 'package:devject/models/user.dart';
+import 'package:devject/providers/user_provider.dart';
+
 
 class UserCubit extends Cubit<User?> {
   UserCubit() : super(null) {

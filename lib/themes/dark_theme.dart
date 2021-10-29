@@ -1,5 +1,6 @@
+import 'package:devject/constants/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:projetex/constants/colors.dart';
+
 
 final ThemeData darkTheme = ThemeData(
   appBarTheme: const AppBarTheme(
@@ -8,6 +9,35 @@ final ThemeData darkTheme = ThemeData(
     toolbarHeight: 50,
     backgroundColor: Colors.transparent,
     shadowColor: Colors.transparent,
+    iconTheme: IconThemeData(
+      color: kPrimaryLightColor,
+      size: 20
+    )
+  ),
+  inputDecorationTheme: const InputDecorationTheme(
+    fillColor: kInputFieldColor,
+    errorStyle: TextStyle(
+      color: kErrorTextColor
+    )
+  ),
+  iconTheme: const IconThemeData(
+    color: kTextColor,
+    size: 20
+  ),
+  colorScheme: const ColorScheme(
+    background: kBackgroundLightColor,
+    brightness: Brightness.dark,
+    error: kErrorTextColor,
+    onBackground: kBackgroundDarkColor,
+    onError: kErrorTextColor,
+    primary: kPrimaryLightColor,
+    onPrimary: kPrimaryDarkColor,
+    primaryVariant: kPrimaryLightColor,
+    secondary: kPrimaryLightColor,
+    onSecondary: kPrimaryLightColor,
+    surface: kPrimaryLightColor,
+    onSurface: kPrimaryLightColor,
+    secondaryVariant: kPrimaryLightColor
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: kPrimaryLightColor,
@@ -16,7 +46,14 @@ final ThemeData darkTheme = ThemeData(
     enableFeedback: false,
     splashColor: kPrimaryDarkColor
   ),
+  timePickerTheme: const TimePickerThemeData(
+    backgroundColor: kBackgroundLightColor
+  ),
   primaryColor: kPrimaryLightColor,
+  
+  primaryColorLight: kPrimaryLightColor,
+  primaryColorDark: kPrimaryDarkColor,
+  backgroundColor: kBackgroundLightColor,
   dividerTheme: const DividerThemeData(
       color: kPrimaryDarkColor
     ),

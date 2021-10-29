@@ -25,5 +25,15 @@
   "theFollowingCharactersAreAllowed": "The following characters are allowed: '.', '_', '-'.",
   "nicknameOrEmail": "Nickname or email",
   "usingAnInvalidCharacter":"Using an invalid character",
-  "emailIsNotCorrect": "Email is not correct"
+  "emailIsNotCorrect": "Email is not correct",
+  "newProject": "New project",
+  "description": "Description",
+  "startDate": "Start date",
+  "endDate": "End date",
+  "create": "Create",
+  "done": "Done",
+  "notFound": "User not found",
+  "unlimited": "Unlimited",
+  "indefinite": "Indefinite",
+  "noProjects": "No projects"
 }

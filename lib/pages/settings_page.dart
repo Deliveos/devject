@@ -1,10 +1,10 @@
+import 'package:devject/services/api.dart';
+import 'package:devject/utils/size.dart';
 import 'package:flutter/material.dart';
-import 'package:projetex/constants/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:projetex/pages/login_page.dart';
-import 'package:projetex/services/projetex_api.dart';
-import 'package:projetex/utils/size.dart';
-import 'package:projetex/widgets/default_sizedbox.dart';
+
+import 'login_page.dart';
+
 
 
 class SettingsPage extends StatelessWidget {
@@ -27,11 +27,11 @@ class SettingsPage extends StatelessWidget {
               delegate: SliverChildListDelegate([
                 Container(
                   height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        kBackgroundLightColor,
-                        kBackgroundDarkColor
+                        Theme.of(context).colorScheme.background,
+                        Theme.of(context).colorScheme.onBackground
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter
@@ -39,7 +39,9 @@ class SettingsPage extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      const HeightSizedBox(80),
+                      SizedBox(
+                        height: ScreenSize.height(context, 10),
+                      ),
                       TextButton(
                         style: ButtonStyle(
                           fixedSize: MaterialStateProperty.all<Size>(Size(ScreenSize.width(context, 90), ScreenSize.width(context, 10))),
@@ -55,7 +57,7 @@ class SettingsPage extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.red)
                         ),
                         onPressed: () async {
-                          await ProjetexApi.logout();
+                          await API.logout();
                           Navigator.pushNamedAndRemoveUntil(context, LoginPage.routeName, (route) => false);
                         },
                       )

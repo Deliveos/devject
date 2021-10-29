@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projetex/constants/colors.dart';
-import 'package:projetex/widgets/input_text_editing_controller.dart';
+
+import 'input_text_editing_controller.dart';
 
 /// Custom TextFormField with dynamic validator
 
@@ -13,9 +13,15 @@ class InputField extends StatefulWidget {
     this.hintText, 
     this.validator, 
     this.onChanged, 
-    this.obscureText = false,
-    this.suffixIcon
-  }) : assert(controller == null || validator != null, "Validator can not be used without controller"),
+    this.onTap,
+    this.obscureText,
+    this.suffixIcon,
+    this.width,
+    this.minLines = 1,
+    this.maxLines = 1,
+    this.readOnly = false,
+    this.maxLength
+  }) : //assert(controller == null && validator != null, "Validator can not be used without controller"),
   super(key: key);
   
   final InputTextEditingController? controller;
@@ -23,8 +29,14 @@ class InputField extends StatefulWidget {
   final String? hintText;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
-  final bool obscureText;
+  final void Function()? onTap;
+  final bool? obscureText;
   final Widget? suffixIcon;
+  final double? width;
+  final int minLines;
+  final int maxLines;
+  final int? maxLength;
+  final bool readOnly;
 
   @override
   State<InputField> createState() => _InputFieldState();
@@ -36,9 +48,10 @@ class _InputFieldState extends State<InputField> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20),
+      width: widget.width,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(30)),
-        color: kInputFieldColor.withOpacity(0.5)
+        color: Theme.of(context).inputDecorationTheme.fillColor!.withOpacity(0.5)
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -47,15 +60,16 @@ class _InputFieldState extends State<InputField> {
           errorText != null 
           ? Text(
             errorText!, 
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12, 
-              color: kErrorTextColor
+              color: Theme.of(context).inputDecorationTheme.errorStyle!.color
             )
           )
           : Container(),
           TextFormField(
+            readOnly: widget.readOnly,
             key: widget.key,
-            obscureText: widget.obscureText,
+            obscureText: widget.obscureText?? false,
             onChanged: (String value) {
               if (widget.onChanged != null) {
                 widget.onChanged!(value);
@@ -67,25 +81,29 @@ class _InputFieldState extends State<InputField> {
                 });
               }
             },
+            onTap: widget.onTap,
             controller: widget.controller,
+            minLines: widget.minLines,
+            maxLines: widget.maxLines,
+            maxLength: widget.maxLength,
             style: Theme.of(context).textTheme.bodyText1,
             keyboardType: widget.keyboardType,
-            cursorColor: kPrimaryLightColor,
+            cursorColor: Theme.of(context).primaryColor,
             cursorHeight: 18,
             decoration: InputDecoration(
               errorBorder: InputBorder.none,
-              errorStyle: const TextStyle(
+              errorStyle: TextStyle(
                 fontSize: 12,
-                color: kErrorTextColor
+                color: Theme.of(context).inputDecorationTheme.errorStyle!.color
               ),
               border: InputBorder.none,
               hintText: widget.hintText,
               hintStyle: Theme.of(context).textTheme.bodyText1,
               suffixIcon: widget.suffixIcon
-            ),
-          ),
-        ],
-      ),
+            )
+          )
+        ]
+      )
     );
   }
 }

@@ -13,7 +13,7 @@
   "taskName": "Название задачи",
   "responsible": "Ответственные",
   "start": "Начало",
-  "timeToExecute": "Время на выполнение",
+  "timeToExecute": "Срок на выполнение",
   "end": "Конец",
   "fieldCanNotBeEmpty": "Поле не может быть пустым",
   "passwordMismatch": "Пароли не совпадают",
@@ -25,5 +25,15 @@
   "theFollowingCharactersAreAllowed": "Допускаются сделающие символы: '.', '_', '-'.",
   "nicknameOrEmail": "Никнейм или эл.почта",
   "usingAnInvalidCharacter": "Использование недопустимого символа",
-  "emailIsNotCorrect": "Неверный адрес электронной почты"
+  "emailIsNotCorrect": "Неверный адрес электронной почты",
+  "newProject": "Новый проект",
+  "description": "Описание",
+  "startDate": "Дата начала",
+  "endDate": "Дата конца",
+  "create": "Создать",
+  "done": "Готово",
+  "notFound": "Пользователь не найден",
+  "unlimited": "Неограничено",
+  "indefinite": "Бессрочный",
+  "noProjects": "Нет проектов"
 }

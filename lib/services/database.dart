@@ -30,6 +30,8 @@ class DatabaseProvider {
         id INTEGER,
         name VARCHAR(255) NOT NULL,
         nickname VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        image TEXT,
         token TEXT
       );
     ''');

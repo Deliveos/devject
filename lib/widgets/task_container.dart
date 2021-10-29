@@ -1,7 +1,6 @@
+import 'package:devject/models/task.dart';
+import 'package:devject/utils/size.dart';
 import 'package:flutter/material.dart';
-import 'package:projetex/constants/colors.dart';
-import 'package:projetex/models/task.dart';
-import 'package:projetex/utils/size.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TaskContainer extends StatelessWidget {
@@ -15,7 +14,7 @@ class TaskContainer extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: AppSize.height(context, 10)),
       padding: EdgeInsets.all(AppSize.width(context, 20)),
       decoration: BoxDecoration(
-        color: kBackgroundLightColor,
+        color: Theme.of(context).backgroundColor,
         borderRadius: BorderRadius.circular(20)
       ),
       child: Column(

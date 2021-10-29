@@ -1,17 +1,16 @@
 import 'package:bloc/bloc.dart';
-import 'package:projetex/models/project.dart';
-import 'package:projetex/services/projetex_api.dart';
+import 'package:devject/models/project.dart';
+import 'package:devject/services/api.dart';
 
-class ProjectsCubit extends Cubit<List<Project>?> {
+class ProjectsCubit extends Cubit<List<Project>> {
   ProjectsCubit() : super([]);
 
   Future<void> load() async {
-    emit(await ProjetexApi.getAllProjects());
+    emit(await API.getAllProjects());
   }
 
-  Future<void> update(Project project) async {
-    state!.add(project);
+  Future<void> add(Project project) async {
+    state.insert(0, project);
     emit(state);
-    
   }
 }
