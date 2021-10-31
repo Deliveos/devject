@@ -3,29 +3,27 @@ import 'package:devject/cubit/projects_cubit.dart';
 import 'package:devject/cubit/user_cubit.dart';
 import 'package:devject/models/project.dart';
 import 'package:devject/models/user.dart';
-import 'package:devject/utils/base64.dart';
 import 'package:devject/utils/size.dart';
+import 'package:devject/widgets/backdrop_filter_container.dart';
 import 'package:devject/widgets/project_container.dart';
-import 'package:devject/widgets/rounded_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'add_project.dart';
 import 'settings_page.dart';
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
-  static const routeName = "MainPage";
+class ProjectPage extends StatefulWidget {
+  const ProjectPage({Key? key, required this.project}) : super(key: key);
+  static const routeName = "ProjectPage";
+
+  final Project project;
 
   @override
-  _MainPageState createState() => _MainPageState();
+  _ProjectPageState createState() => _ProjectPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _ProjectPageState extends State<ProjectPage> {
   final ScrollController _controller = ScrollController();
   bool topContainerIsClosed = false;
 
@@ -50,23 +48,23 @@ class _MainPageState extends State<MainPage> {
                   appBar: AppBar(
                     backgroundColor: Theme.of(context).backgroundColor,
                     title: Text(
-                      user != null ? user.name : "...",
+                      widget.project.name,
                       style: Theme.of(context).textTheme.subtitle1
                     ),
-                    actions: [
-                      IconButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SettingsPage()
-                          )
-                        ),
-                        icon: Icon(Icons.settings,
-                          color: Theme.of(context).textTheme.bodyText1!.color,
-                          size: 20
-                        )
-                      )
-                    ]
+                    // actions: [
+                    //   IconButton(
+                    //     onPressed: () => Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => const SettingsPage()
+                    //       )
+                    //     ),
+                    //     icon: Icon(Icons.settings,
+                    //       color: Theme.of(context).textTheme.bodyText1!.color,
+                    //       size: 20
+                    //     )
+                    //   )
+                    // ]
                   ),
                   body: Center(
                     child: Container(
@@ -95,42 +93,12 @@ class _MainPageState extends State<MainPage> {
                               alignment: Alignment.topCenter,
                               fit: BoxFit.fill,
                               child: Column(children: <Widget>[
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: InkWell(
-                                    child: RoundedImage(
-                                      image: user?.image != null
-                                      ? imageFromBase64String(
-                                          user!.image!,
-                                          height: ScreenSize.width(context, 30),
-                                          width: ScreenSize.width(context, 30),
-                                        )
-                                      : SvgPicture.asset(
-                                          "assets/images/avatar.svg", 
-                                          width: 100, 
-                                          height: 100
-                                        )
-                                    ),
-                                    // child: ClipRRect(
-                                    //   borderRadius: BorderRadius.circular(
-                                    //       AppSize.width(context, 100)),
-                                    //   child: user?.image != null
-                                    //   // TODO: create image view
-                                    //   ? 
-                                    //   imageFromBase64String(
-                                    //     user!.image!,
-                                    //     height: AppSize.width(context, 100),
-                                    //     width: AppSize.width(context, 100),
-                                    //   )
-                                    //   : SvgPicture.asset(
-                                    //     "assets/images/avatar.svg", 
-                                    //     width: 100, 
-                                    //     height: 100
-                                    //   )
-                                    // ),
-                                    onTap: () async => pickImage(context),
-                                  ),
+                                if(widget.project.responsible.isNotEmpty)
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(children: buildResponsible(context, widget.project.responsible),),
                                 ),
+                              if(widget.project.responsible.isNotEmpty)
                                 SizedBox(
                                   height: ScreenSize.height(context, 3),
                                 ),
@@ -167,15 +135,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       child: IconButton(
                                         onPressed: () {
-                                          FlutterClipboard.copy(user!.nickname);
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                            content: Text(
-                                              AppLocalizations.of(context)!.copied + '!',
-                                              style: Theme.of(context).textTheme.bodyText1,
-                                            ),
-                                            backgroundColor: Theme.of(context).backgroundColor,
-                                            duration: const Duration(milliseconds: 800),
-                                          ));
+                                          FlutterClipboard.copy("deliveos");
                                         },
                                         icon: Icon(
                                           Icons.content_copy,
@@ -193,23 +153,23 @@ class _MainPageState extends State<MainPage> {
                               ]),
                             ),
                           ),
-                          if (projects.isNotEmpty)
-                            Expanded(
-                              flex: 4,
-                              child: ListView.builder(
-                                controller: _controller,
-                                itemCount: projects.length,
-                                itemBuilder: (context, index) => ProjectContainer(projects[index])
-                              ),
-                            )
-                          else
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                AppLocalizations.of(context)!.noProjects,
-                                style: Theme.of(context).textTheme.bodyText1,
-                              )
-                            )
+                          // if (projects.isNotEmpty)
+                          //   Expanded(
+                          //     flex: 4,
+                          //     child: ListView.builder(
+                          //       controller: _controller,
+                          //       itemCount: projects.length,
+                          //       itemBuilder: (context, index) => ProjectContainer(projects[index])
+                          //     ),
+                          //   )
+                          // else
+                          //   Expanded(
+                          //     flex: 4,
+                          //     child: Text(
+                          //       AppLocalizations.of(context)!.noProjects,
+                          //       style: Theme.of(context).textTheme.bodyText1,
+                          //     )
+                          //   )
                         ],
                       ),
                     )
@@ -231,28 +191,28 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Future pickImage(BuildContext context) async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-      final imageTemporary = await ImageCropper.cropImage(
-        sourcePath: image.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-        aspectRatioPresets: [CropAspectRatioPreset.square],
-        androidUiSettings: AndroidUiSettings(
-          toolbarTitle: AppLocalizations.of(context)!.imageEditor,
-          toolbarWidgetColor: Theme.of(context).primaryColor,
-          toolbarColor: Theme.of(context).backgroundColor,
-          backgroundColor: Theme.of(context).backgroundColor,
-          hideBottomControls: true,
-          // activeControlsWidgetColor: Theme.of(context).primaryColor,
+  List<Widget> buildResponsible(BuildContext context, List<User> responsible) {
+    final List<Widget> res = [];
+    for (int i = 0; i < responsible.length; i++) {
+      res.add(BackdropFilterContaiter(
+        padding: EdgeInsets.all(ScreenSize.width(context, 5)),
+          child: Column(
+            children: [
+              responsible[i].image != null
+              // TODO: create image view
+              ? Container()
+              : SvgPicture.asset("assets/images/avatar.svg", width: 50, height: 50,),
+              SizedBox(height: ScreenSize.height(context, 1)),
+              Text(responsible[i].name),
+              SizedBox(height: ScreenSize.height(context, 1)),
+              Text(responsible[i].nickname, style: Theme.of(context).textTheme.bodyText1),
+              SizedBox(height: ScreenSize.height(context, 1)),
+            ]
+          )
         )
       );
-      BlocProvider.of<UserCubit>(context).update(
-        BlocProvider.of<UserCubit>(context).state!.copyWith(image: base64String(imageTemporary!.readAsBytesSync()))
-      );
-    } on PlatformException catch (e) {
-      print("Filed to pick image! $e");
+      res.add(SizedBox(width: ScreenSize.width(context, 5)));
     }
+    return res;
   }
 }

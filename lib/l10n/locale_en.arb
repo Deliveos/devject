@@ -35,5 +35,7 @@
   "notFound": "User not found",
   "unlimited": "Unlimited",
   "indefinite": "Indefinite",
-  "noProjects": "No projects"
+  "noProjects": "No projects",
+  "imageEditor": "Image editor",
+  "copied": "Copied"
 }

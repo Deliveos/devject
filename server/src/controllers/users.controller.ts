@@ -15,10 +15,10 @@ class UsersController {
     );
   }
 
-  static async update(name: String, image: String, password: String, id: Number) {
+  static async update(name: String, image: String, id: Number) {
     return await pool.query(
-      "UPDATE users SET name=$1, image=$2, password=$3 WHERE id=$4", 
-      [name, image, password, id]
+      "UPDATE users SET name=$1, image=$2 WHERE id=$3", 
+      [name, image, id]
     );
   }
 

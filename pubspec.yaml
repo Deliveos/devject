@@ -41,6 +41,8 @@ dependencies:
   flutter_typeahead: ^3.2.1
   flutter_svg: ^0.23.0+1
   fluentui_system_icons: ^1.1.145
+  image_picker: ^0.8.4+4
+  image_cropper: ^1.4.1
 
 
   # The following adds the Cupertino Icons font to your application.

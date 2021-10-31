@@ -141,4 +141,18 @@ class API {
     }
     return users.isNotEmpty ? users : [];
   }
+
+  static Future updateUser(User user) async {
+    final http.Response response = await http.put(
+      Uri.parse(_createPath("users")),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer ' + user.token!
+      },
+      body: jsonEncode(<String, String>{
+        'name': user.name,
+        'image': user.image!
+      }),
+    );
+  }
 }

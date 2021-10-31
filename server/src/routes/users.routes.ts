@@ -153,11 +153,26 @@ router.post("/login", [verifyPassword], async (req: Request, res: Response)=>  {
   }
 });
 
-// FIXME: id = token.id
+router.put('/', [checkAuth], async (req: Request, res: Response) => {
+  logRequest(req);
+  const jwtPayload = jwt.verify(req.headers.authorization.split(' ')[1], config.SECRET) as string;
+  const id = jwtPayload['id'];
+  const {name, image} = req.body;
+  await UsersController.update(name, image, id);
+  sendResponse(res, null, {status: Status.SUCCESS});
+
+});
+
 router.delete("/:id", [checkAuth], async (req: Request, res: Response) => {
+  const jwtPayload = jwt.verify(req.headers.authorization.split(' ')[1], config.SECRET) as string;
+  const userId = jwtPayload['id'];
   const id = Number(req.params.id);
-  await UsersController.delete(id);
-  res.json({status: Status.SUCCESS});
+  if (userId == id) {
+    await UsersController.delete(id);
+    sendResponse(res, null, {status: Status.SUCCESS});
+  } else {
+    sendResponse(res, 403, {status: Status.FAILURE, message: Message.FORTBIDDEN})
+  }
 });
 
 /*
@@ -216,18 +231,5 @@ router.delete("/:id", [checkAuth], async (req: Request, res: Response) => {
 *   }
 * }
 */
-router.get('/:user_id/projects/:project_id', async (req: Request, res: Response) => {
-  const userId = req.params.user_id;
-  const projectId = req.params.project_id;
-});
-
-/* Create new task
-* /api/user/:user_id/projects/:project_id/tasks/
-*/
-
-router.post('/:user_id/projects/:project_id/tasks/', async (req: Request, res: Response) => {
-  const userId = req.params.user_id;
-  const projectId = req.params.project_id;
-});
 
 export default router;

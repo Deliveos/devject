@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:devject/models/user.dart';
 import 'package:devject/providers/user_provider.dart';
+import 'package:devject/services/api.dart';
 
 
 class UserCubit extends Cubit<User?> {
@@ -12,7 +13,9 @@ class UserCubit extends Cubit<User?> {
     emit(await UserProvider.get());
   }
 
-  Future update(User? user) async {
+  Future update(User user) async {
     emit(user);
+    await UserProvider.update(user);
+    await API.updateUser(user);
   }
 }

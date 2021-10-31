@@ -1,5 +1,6 @@
 import 'package:devject/models/project.dart';
 import 'package:devject/models/user.dart';
+import 'package:devject/pages/project_page.dart';
 import 'package:devject/utils/size.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,7 +26,7 @@ class ProjectContainer extends StatelessWidget {
             style: const ButtonStyle(
               enableFeedback: false,
             ),
-            onPressed: () {}, 
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectPage(project: project))), 
             child: Text(
               project.name, 
               style: Theme.of(context).textTheme.bodyText2!.copyWith(

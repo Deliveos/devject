@@ -31,4 +31,22 @@ class User {
     "image": image,
     "token": token
   };
+
+  User copyWith({
+    int? id, 
+    String? name,
+    String? nickname,
+    String? email,
+    String? image,
+    String? token
+  }) {
+    return User(
+      id: id ?? this.id, 
+      name: name ?? this.name, 
+      nickname: nickname ?? this.nickname, 
+      email: email ?? this.email,
+      image: image ?? this.image,
+      token: token ?? this.token
+    );
+  }
 }

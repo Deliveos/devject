@@ -4,11 +4,13 @@ import 'package:devject/cubit/responsible_cubit.dart';
 import 'package:devject/models/project.dart';
 import 'package:devject/models/user.dart';
 import 'package:devject/services/api.dart';
+import 'package:devject/utils/base64.dart';
 import 'package:devject/utils/size.dart';
 import 'package:devject/widgets/backdrop_filter_container.dart';
 import 'package:devject/widgets/button.dart';
 import 'package:devject/widgets/input_field.dart';
 import 'package:devject/widgets/input_text_editing_controller.dart';
+import 'package:devject/widgets/rounded_image.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +38,6 @@ class _AddProjectPageState extends State<AddProjectPage> {
 
   @override
   Widget build(BuildContext context) {
-    //final responsible = BlocProvider.of<ResponsibleCubit>(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -201,10 +202,19 @@ class _AddProjectPageState extends State<AddProjectPage> {
                                             mainAxisAlignment: MainAxisAlignment.start,
                                             children: [
                                               if (user.image != null) 
-                                                Container()
-                                                // Image(image: )
+                                                RoundedImage(
+                                                  image: imageFromBase64String(
+                                                    user.image!,
+                                                    height: ScreenSize.width(context, 15),
+                                                    width: ScreenSize.width(context, 15),
+                                                  )
+                                                )
                                               else
-                                                SvgPicture.asset("assets/images/avatar.svg", width: 50, height: 50,),
+                                                SvgPicture.asset(
+                                                  "assets/images/avatar.svg", 
+                                                  height: ScreenSize.width(context, 15),
+                                                  width: ScreenSize.width(context, 15),
+                                                ),
                                               SizedBox(width: ScreenSize.width(context, 3)),
                                               Column(
                                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -251,8 +261,9 @@ class _AddProjectPageState extends State<AddProjectPage> {
                                   Navigator.pop(context);
                                 },
                                 child: Text(
-                                    AppLocalizations.of(context)!.create.toUpperCase(),
-                                    style: Theme.of(context).textTheme.bodyText1),
+                                  AppLocalizations.of(context)!.create.toUpperCase(),
+                                  style: Theme.of(context).textTheme.bodyText1
+                                ),
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 30, 
                                   vertical: 5
@@ -311,6 +322,7 @@ class _AddProjectPageState extends State<AddProjectPage> {
         style: Theme.of(context).textTheme.bodyText1,
       ),
       backgroundColor: Theme.of(context).backgroundColor,
+      duration: const Duration(milliseconds: 2000)
     ));
   }
 
@@ -322,10 +334,21 @@ class _AddProjectPageState extends State<AddProjectPage> {
         padding: EdgeInsets.all(ScreenSize.width(context, 5)),
           child: Column(
             children: [
-              responsibleCubit.state[i].image != null
-              // TODO: create image view
-              ? Container()
-              : SvgPicture.asset("assets/images/avatar.svg", width: 50, height: 50,),
+              RoundedImage(
+                image: responsibleCubit.state[i].image != null
+                ? imageFromBase64String(
+                  responsibleCubit.state[i].image!,
+                  height: ScreenSize.width(context, 25),
+                  width: ScreenSize.width(context, 25)
+                )
+                : SvgPicture.asset(
+                  "assets/images/avatar.svg", 
+                  height: ScreenSize.width(context, 25),
+                  width: ScreenSize.width(context, 25)
+                ),
+              ),
+
+              
               SizedBox(height: ScreenSize.height(context, 1)),
               Text(responsibleCubit.state[i].name),
               SizedBox(height: ScreenSize.height(context, 1)),

@@ -16,7 +16,7 @@ class BackdropFilterContaiter extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(25)),
-            color: Theme.of(context).inputDecorationTheme.fillColor!.withOpacity(0.3)
+            color: Theme.of(context).backgroundColor.withOpacity(0.3)
           ),
           margin: margin,
           padding: padding,

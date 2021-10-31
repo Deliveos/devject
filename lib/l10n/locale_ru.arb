@@ -35,5 +35,7 @@
   "notFound": "Пользователь не найден",
   "unlimited": "Неограничено",
   "indefinite": "Бессрочный",
-  "noProjects": "Нет проектов"
+  "noProjects": "Нет проектов",
+  "imageEditor": "Редактор фото",
+  "copied": "Скопировано"
 }
